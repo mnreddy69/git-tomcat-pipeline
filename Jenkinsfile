@@ -1,31 +1,19 @@
 node{
 
-# def tomcatWeb = 'D:\\Auto_deployment\\apache-tomcat-9.0.30\\apache-tomcat-9.0.30\\webapps'
-#  def tomcatBin = 'D:\\Auto_deployment\\apache-tomcat-9.0.30\\apache-tomcat-9.0.30\\bin'
    def tomcatWeb = 'C:\\tomcat\\webapps'
    def tomcatBin = 'C:\\tomcat\\bin'
-  def tomcatStatus = ''
+   def mvnHome = 'C:\\maven'
+   def tomcatStatus = ''
+   
    stage('SCM Checkout'){
-#   git 'https://github.com/sivajavatechie/JenkinsWar.git'
-     git 'https://github.com/mnreddy69/git-tomcat-pipeline.git'
+      git 'https://github.com/mnreddy69/git-tomcat-pipeline.git'
    }
+   
    stage('Compile-Package-create-war-file'){
-      // Get maven home path
-      def mvnHome =  tool name: 'maven-3', type: 'maven'   
-      bat "${mvnHome}/bin/mvn package"
+      // Get maven home path   
+      bat "${mvnHome}/bin/mvn clean package"
       }
-/*   stage ('Stop Tomcat Server') {
-               bat ''' @ECHO OFF
-               wmic process list brief | find /i "tomcat" > NUL
-               IF ERRORLEVEL 1 (
-                    echo  Stopped
-               ) ELSE (
-               echo running
-                  "${tomcatBin}\\shutdown.bat"
-                  sleep(time:10,unit:"SECONDS") 
-               )
-'''
-   }*/
+
    stage('Deploy to Tomcat'){
      bat "copy target\\JenkinsWar.war \"${tomcatWeb}\\JenkinsWar.war\""
    }
